@@ -13,9 +13,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TabHost;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +34,7 @@ import java.util.Date;
  * create an instance of this fragment.
  */
 public class OZFragment extends Fragment {
+    private static final String TAG = "OZFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -241,6 +246,8 @@ public class OZFragment extends Fragment {
 
             pVuvSootnshenie.setText("1/" + sootnoshenie);
         } catch (Exception e) {
+            Log.e(TAG + ".getSootnoshenie", e.getMessage());
+            pVuvSootnshenie.setText("1/" + 0);
         }
     }
 
@@ -334,8 +341,6 @@ public class OZFragment extends Fragment {
                 return insets;
             }
         });
-        //вывод вкладок
-        //setTitle("TabHost");
 
         TabHost tabHost = view.findViewById(R.id.tabHost);
 
@@ -370,31 +375,36 @@ public class OZFragment extends Fragment {
         pVuvDPrDd = view.findViewById(R.id.pVuvKorPricel);
         pVuvDYglomer = view.findViewById(R.id.pVuvKorYglomer);
 
+        //мерцание
+        @SuppressLint("ResourceType") final Animation animRotate = AnimationUtils.loadAnimation(getContext(), R.drawable.dr_mercanie);
 
         //для завершения работы
         vuhod = view.findViewById(R.id.btnVuxod);
         vuhod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.startAnimation(animRotate);
                 System.exit(0);
             }
         });
 
         poleZapisStrelbu = view.findViewById(R.id.editTextTextMultiLine);
 
-        //инициализация кнпки реш корект
+        //инициализация кнопки реш корект
         btnReshKorr = view.findViewById(R.id.poscitatKorrektyry);
         btnReshKorr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.startAnimation(animRotate);
                 try {
-                    String[] korr = reshKorr(Double.parseDouble(pdX.getText().toString()), Double.parseDouble(pdY.getText().toString()));
+                    String[] korr = OZFragment.this.reshKorr(Double.parseDouble(pdX.getText().toString()), Double.parseDouble(pdY.getText().toString()));
                     pVuvDPrDd.setText(korr[0]);
                     pVuvDYglomer.setText(korr[1]);
                 } catch (Exception ex) {
+                    Log.e("OZFragment.onCreateView", ex.getMessage());
                 }
                 komPoRaz = true;
-                showSimpleDialog();
+                OZFragment.this.showSimpleDialog();
             }
         });
         //инициализация кнопки добавить в серию
@@ -403,6 +413,7 @@ public class OZFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+                    v.startAnimation(animRotate);
                     setRazrVSeriu();
                     setDxDyVSeriu();
                     getSootnoshenie();
@@ -427,6 +438,7 @@ public class OZFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+                    v.startAnimation(animRotate);
                     poschitKorPoSerii();
                 } catch (Exception e) {
                 }
@@ -437,13 +449,14 @@ public class OZFragment extends Fragment {
         pVuvKorrPricPoVd = view.findViewById(R.id.pVuvKorPricVd);
         pVuvKorrDovPoSerii = view.findViewById(R.id.pVuvKorYglVd);
         //запись стрельбы
-        pPozuvnoi =view.findViewById(R.id.pPozuvnoi);
+        pPozuvnoi = view.findViewById(R.id.pPozuvnoi);
         pNZeli = view.findViewById(R.id.pNZeli);
 
         zapisDannueOP = view.findViewById(R.id.zapisDanOP);
         zapisDannueOP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.startAnimation(animRotate);
                 poleZapisStrelbu.append(new Date() + "\n" + pPozuvnoi.getText().toString()
                         + ",  Цель № " + pNZeli.getText().toString() + "\n");
                 schetchikDX = 0;

@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-</selector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Нижняя тень размером 15dp -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Цвет тени кнопки -->
+            <solid android:color="#711E18" />
+            <corners android:radius="7dp" />
+        </shape>
+    </item>
+    <!-- Белый верхний цвет -->
+    <item android:bottom="15px">
+        <shape android:shape="rectangle">
+            <padding android:bottom="10dp" android:top="10dp" android:left="20dp" android:right="20dp"/>
+            <!-- Цвет верхней части кнопки -->
+            <solid android:color="#A04943" />
+            <corners android:radius="7dp" />
+        </shape>
+    </item>
+</layer-list>
