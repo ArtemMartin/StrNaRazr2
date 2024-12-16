@@ -156,13 +156,13 @@
 
                             <EditText
                                 android:id="@+id/pNZeli"
-                                android:layout_width="100sp"
+                                android:layout_width="120sp"
                                 android:layout_height="50sp"
                                 android:layout_margin="5dp"
                                 android:background="#8FA772"
                                 android:elevation="10dp"
                                 android:ems="10"
-                                android:inputType="numberDecimal"
+                                android:inputType="text"
                                 android:textColor="@color/black"
                                 android:textSize="34sp" />
                         </LinearLayout>

@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,11 +146,9 @@ public class OZFragment extends Fragment {
                         if (!komPoRaz) komandaPoSerii();
                     }
                 })
-                .setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //  Действие для кнопки "Нет"
-                        Toast.makeText(requireContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
-                    }
+                .setNegativeButton("Нет", (dialog, id) -> {
+                    //  Действие для кнопки "Нет"
+                    Toast.makeText(requireContext().getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
                 });
         //Создание диалогового окна
         AlertDialog alert = builder.create();
@@ -385,51 +384,44 @@ public class OZFragment extends Fragment {
 
         //для завершения работы
         vuhod = view.findViewById(R.id.btnVuxod);
-        vuhod.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(animRotate);
-                System.exit(0);
-            }
+        vuhod.setOnClickListener(v -> {
+            v.startAnimation(animRotate);
+            System.exit(0);
         });
 
         poleZapisStrelbu = view.findViewById(R.id.editTextTextMultiLine);
 
         //инициализация кнопки реш корект
         btnReshKorr = view.findViewById(R.id.poscitatKorrektyry);
-        btnReshKorr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(animRotate);
-                try {
-                    String[] korr = OZFragment.this.reshKorr(Double.parseDouble(pdX.getText().toString()), Double.parseDouble(pdY.getText().toString()));
-                    pVuvDPrDd.setText(korr[0]);
-                    pVuvDYglomer.setText(korr[1]);
-                } catch (Exception ex) {
-                    Log.e("OZFragment.onCreateView", ex.getMessage());
-                }
-                komPoRaz = true;
-                OZFragment.this.showSimpleDialog();
+        btnReshKorr.setOnClickListener(v -> {
+            v.startAnimation(animRotate);
+            try {
+                String[] korr = OZFragment.this.reshKorr(Double.parseDouble(pdX.getText().toString()), Double.parseDouble(pdY.getText().toString()));
+                pVuvDPrDd.setText(korr[0]);
+                pVuvDYglomer.setText(korr[1]);
+            } catch (Exception ex) {
+                Log.e("OZFragment.onCreateView", ex.getMessage());
             }
+            komPoRaz = true;
+            OZFragment.this.showSimpleDialog();
         });
+
         //инициализация кнопки добавить в серию
         btnDobavRAxrVSeriy = view.findViewById(R.id.dobavitRazrVSeriy);
-        btnDobavRAxrVSeriy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    v.startAnimation(animRotate);
-                    setRazrVSeriu();
-                    setDxDyVSeriu();
-                    getSootnoshenie();
-                    poleZapisStrelbu.append("Разрыв № " + schetckikRazruvov + ": dX: " + pdX.getText().toString()
-                            + ", dY: " + pdY.getText().toString() + "\n" + "Корректура. Пр/Д: "
-                            + pVuvDPrDd.getText().toString()
-                            + ". Угломер: " + pVuvDYglomer.getText().toString() + "\n");
-                } catch (Exception e) {
-                }
+        btnDobavRAxrVSeriy.setOnClickListener(v -> {
+            try {
+                v.startAnimation(animRotate);
+                setRazrVSeriu();
+                setDxDyVSeriu();
+                getSootnoshenie();
+                poleZapisStrelbu.append("Разрыв № " + schetckikRazruvov + ": dX: " + pdX.getText().toString()
+                        + ", dY: " + pdY.getText().toString() + "\n" + "Корректура. Пр/Д: "
+                        + pVuvDPrDd.getText().toString()
+                        + ". Угломер: " + pVuvDYglomer.getText().toString() + "\n");
+            } catch (Exception e) {
             }
         });
+
         //инициализация полей по серии
         pVuvKolRazr = view.findViewById(R.id.pNrazruva);
         pVuvPlus = view.findViewById(R.id.pVuvPlus);
@@ -439,17 +431,14 @@ public class OZFragment extends Fragment {
         pVuvSootnshenie = view.findViewById(R.id.pVuvSootnosh);
         //посчитать корректуру  по серии
         btnKorrPoSerii = view.findViewById(R.id.poscitKorrPoSerii);
-        btnKorrPoSerii.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    v.startAnimation(animRotate);
-                    poschitKorPoSerii();
-                } catch (Exception e) {
-                }
-                komPoRaz = false;
-                showSimpleDialog();
+        btnKorrPoSerii.setOnClickListener(v -> {
+            try {
+                v.startAnimation(animRotate);
+                poschitKorPoSerii();
+            } catch (Exception e) {
             }
+            komPoRaz = false;
+            showSimpleDialog();
         });
         pVuvKorrPricPoVd = view.findViewById(R.id.pVuvKorPricVd);
         pVuvKorrDovPoSerii = view.findViewById(R.id.pVuvKorYglVd);
@@ -468,6 +457,22 @@ public class OZFragment extends Fragment {
             schetchikPlus = 0;
             schetckikRazruvov = 0;
         });
+
+        //слушаем поле номер цели
+        pNZeli.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    ReadFileZeli readFileZeli = new ReadFileZeli((MainActivity) getActivity().getApplicationContext()
+                            , (String) pNZeli.getText());
+                    String[] xyZeli = readFileZeli.getXYZeli();
+                    pXc.setText(xyZeli[0]);
+                    pYc.setText(xyZeli[1]);
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 }
