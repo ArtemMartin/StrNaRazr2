@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
@@ -459,18 +460,15 @@ public class OZFragment extends Fragment {
         });
 
         //слушаем поле номер цели
-        pNZeli.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    ReadFileZeli readFileZeli = new ReadFileZeli((MainActivity) getActivity().getApplicationContext()
-                            , (String) pNZeli.getText());
-                    String[] xyZeli = readFileZeli.getXYZeli();
-                    pXc.setText(xyZeli[0]);
-                    pYc.setText(xyZeli[1]);
-                }
-                return false;
+        pNZeli.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                ReadFileZeli readFileZeli = new ReadFileZeli(pNZeli.getText().toString()
+                , view.getContext());
+                String[] xyZeli = readFileZeli.getXYZeli();
+                pXc.setText(xyZeli[0]);
+                pYc.setText(xyZeli[1]);
             }
+            return false;
         });
 
         return view;
