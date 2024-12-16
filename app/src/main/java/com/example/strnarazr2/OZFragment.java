@@ -201,6 +201,10 @@ public class OZFragment extends Fragment {
             } else {
                 korPric = (vd * 2) / dXtus;
             }
+            //определяем знак корректуры
+            if (schetchikPlus > schetchikMinus)
+                korPric *= -1;
+
             if (korPric > 0) {
                 pVuvKorrPricPoVd.setText("+" + Math.round(korPric) + "/" + "+" + Math.round(korPric * dXtus));
             } else {
@@ -243,11 +247,13 @@ public class OZFragment extends Fragment {
                 sootnoshenie = 1;
             }
             if (sootnoshenie == 0) sootnoshenie = 1;
-
             pVuvSootnshenie.setText("1/" + sootnoshenie);
         } catch (Exception e) {
             Log.e(TAG + ".getSootnoshenie", e.getMessage());
-            pVuvSootnshenie.setText("1/" + 0);
+            if (schetchikPlus == 0)
+                pVuvSootnshenie.setText("0/" + schetchikMinus);
+            if (schetchikMinus == 0)
+                pVuvSootnshenie.setText("0/" + schetchikPlus);
         }
     }
 
@@ -280,7 +286,6 @@ public class OZFragment extends Fragment {
         }
         pVuvPlus.setText(String.valueOf(schetchikPlus));
         pVuvMinus.setText(String.valueOf(schetchikMinus));
-
     }
 
     //вывод средн dx, dy
@@ -453,20 +458,16 @@ public class OZFragment extends Fragment {
         pNZeli = view.findViewById(R.id.pNZeli);
 
         zapisDannueOP = view.findViewById(R.id.zapisDanOP);
-        zapisDannueOP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.startAnimation(animRotate);
-                poleZapisStrelbu.append(new Date() + "\n" + pPozuvnoi.getText().toString()
-                        + ",  Цель № " + pNZeli.getText().toString() + "\n");
-                schetchikDX = 0;
-                schetchikDY = 0;
-                schetchikMinus = 0;
-                schetchikPlus = 0;
-                schetckikRazruvov = 0;
-            }
+        zapisDannueOP.setOnClickListener(v -> {
+            v.startAnimation(animRotate);
+            poleZapisStrelbu.append(new Date() + "\n" + pPozuvnoi.getText().toString()
+                    + ",  Цель № " + pNZeli.getText().toString() + "\n");
+            schetchikDX = 0;
+            schetchikDY = 0;
+            schetchikMinus = 0;
+            schetchikPlus = 0;
+            schetckikRazruvov = 0;
         });
-
         return view;
     }
 }
