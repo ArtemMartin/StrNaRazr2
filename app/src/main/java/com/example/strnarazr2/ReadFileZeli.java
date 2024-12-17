@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -21,8 +23,9 @@ public class ReadFileZeli {
 
     @SuppressLint("SuspiciousIndentation")
     public String[] getXYZeli() {
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(mainActivity.getAssets().open(nameFIle)))) {
+        //получение доступа к памяти телефона по адресу /Android/data/com.example.strnarazr2/cache
+        File file = new File(mainActivity.getExternalCacheDir(), nameFIle);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
             String line;
             String[] masStr;
             while ((line = reader.readLine()) != null) {
